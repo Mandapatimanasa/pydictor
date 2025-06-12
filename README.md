@@ -204,3 +204,61 @@ s = 5
 
 
 ##### Destination is just a point of departure，It's your show time.
+import java.security.SecureRandom;
+import java.util.Scanner;
+
+public class PasswordGenerator {
+    private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
+    private static final String NUMBERS = "0123456789";
+    private static final String SPECIALS = "!@#$%^&*()-_=+[]{}|;:,.<>?";
+
+    private static final SecureRandom random = new SecureRandom();
+
+    public static String generatePassword(int length, boolean useUpper, boolean useLower, boolean useNumbers, boolean useSpecials) {
+        StringBuilder characterPool = new StringBuilder();
+        if (useUpper) characterPool.append(UPPER);
+        if (useLower) characterPool.append(LOWER);
+        if (useNumbers) characterPool.append(NUMBERS);
+        if (useSpecials) characterPool.append(SPECIALS);
+
+        if (characterPool.length() == 0) {
+            throw new IllegalArgumentException("At least one character set must be selected.");
+        }
+
+        StringBuilder password = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characterPool.length());
+            password.append(characterPool.charAt(index));
+        }
+        return password.toString();
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter password length: ");
+        int length = scanner.nextInt();
+
+        System.out.print("Include uppercase letters? (true/false): ");
+        boolean useUpper = scanner.nextBoolean();
+
+        System.out.print("Include lowercase letters? (true/false): ");
+        boolean useLower = scanner.nextBoolean();
+
+        System.out.print("Include numbers? (true/false): ");
+        boolean useNumbers = scanner.nextBoolean();
+
+        System.out.print("Include special characters? (true/false): ");
+        boolean useSpecials = scanner.nextBoolean();
+
+        try {
+            String password = generatePassword(length, useUpper, useLower, useNumbers, useSpecials);
+            System.out.println("Generated Password: " + password);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        scanner.close();
+    }
+}
